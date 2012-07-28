@@ -7,6 +7,7 @@ function OnGUI() {
         if (GUILayout.Button("JOIN GAME!")) {
             var cubeman = Network.Instantiate(cubemanPrefab, transform.position, transform.rotation, 0);
             cubeman.GetComponent.<PlayerMove>().enabled = true;
+            cubeman.GetComponentInChildren.<Camera>().enabled = true;
             Destroy(gameObject);
         }
     }

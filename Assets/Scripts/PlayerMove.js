@@ -9,19 +9,23 @@ var bomPrefab : GameObject;
 var damageFxPrefab : GameObject;
 
 function Update () {
-    var move = Vector3(Input.GetAxis("Horizontal"), 0.0, Input.GetAxis("Vertical"));
-    transform.localPosition += move * speed * Time.deltaTime;
-    
-    if (move.magnitude > 0.1) transform.LookAt(transform.position + move);
+    var move = transform.right * Input.GetAxis("Horizontal") + 
+     transform.forward * Input.GetAxis("Vertical");
 
-    if (Input.GetButtonDown("Jump")) {
+    var smoothMove = GetComponent.<SmoothMove>();
+    smoothMove.targetPosition += move * speed * Time.deltaTime;
+    
+    var yaw = 300.0 * Input.GetAxis("Mouse X") * Time.deltaTime;
+    smoothMove.targetRotation = Quaternion.AngleAxis(yaw, Vector3.up) * smoothMove.targetRotation;
+
+    if (Input.GetButtonDown("Fire1")) {
         Network.Instantiate(bulletPrefab, transform.position + transform.forward * 0.5 + Vector3.up * 0.5, 
             transform.rotation, 0);
     }
-    if (Input.GetButtonDown("Fire1")) {
-        Network.Instantiate(bomPrefab, transform.position + transform.forward * 0.5 + Vector3.up * 0.5,
+    if (Input.GetButtonDown("Jump")) {
+        Network.Instantiate(bomPrefab, transform.position + transform.forward * 0.5 + Vector3.up * 0.7,
             transform.rotation, 0);
-            }
+    }
 }
 
 function OnTriggerEnter(collider : Collider) {
